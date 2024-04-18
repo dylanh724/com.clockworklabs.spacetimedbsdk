@@ -132,3 +132,7 @@ using SpacetimeDB.Types;
 
 Reducer.MovePlayer(new StdbVector2(0.0f, 0.0f), new StdbVector2(1.0f, 1.0f));
 ```
+
+## Editing the Wrapper (Internal)
+
+SpacetimeDB devs may use the internal [unity-sdk-wrapper](https://github.com/clockworklabs/unity-sdk-wrapper) to edit the SDK within Unity as an _embedded_, editable package.
