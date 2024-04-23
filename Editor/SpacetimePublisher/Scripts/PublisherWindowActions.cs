@@ -1593,12 +1593,12 @@ namespace SpacetimeDB.Editor
             if (generatedFilesExist())
             {
                 // Wipe old files
-                Directory.Delete(PathToAutogenDir, recursive:true);
+                Directory.Delete(PATH_TO_AUTOGEN_DIR, recursive:true);
             }
             
             GenerateRequest request = new(
                 serverModulePath,
-                PathToAutogenDir,
+                PATH_TO_AUTOGEN_DIR,
                 deleteOutdatedFiles: true);
 
             GenerateResult generateResult = await SpacetimeDbPublisherCliActions
@@ -1675,16 +1675,16 @@ namespace SpacetimeDB.Editor
         private void onGenerateClientFilesSuccess(string serverModulePath)
         {
             Debug.Log($"Generated SpacetimeDB client files from:" +
-                $"\n`{serverModulePath}`\n\nto:\n`{PathToAutogenDir}`");
+                $"\n`{serverModulePath}`\n\nto:\n`{PATH_TO_AUTOGEN_DIR}`");
          
             resetGenerateUi();
             publishResultStatusLabel.text = SpacetimeMeta.GetStyledStr(
                 SpacetimeMeta.StringStyle.Success,
-                "Generated to dir: <color=white>Assets/Autogen/</color>");
+                $"Generated to dir: <color=white>{NormalizePath(RELATIVE_PATH_TO_AUTOGEN_DIR)}/</color>");
             ShowUi(publishResultStatusLabel);
         }
         
-        bool generatedFilesExist() => Directory.Exists(PathToAutogenDir);
+        bool generatedFilesExist() => Directory.Exists(PATH_TO_AUTOGEN_DIR);
 
         /// Shared Ui changes after success/fail, or init on ui reset
         private void resetGenerateUi()
