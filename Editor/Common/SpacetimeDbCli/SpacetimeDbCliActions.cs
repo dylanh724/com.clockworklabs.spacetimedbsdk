@@ -12,6 +12,13 @@ namespace SpacetimeDB.Editor
     /// - (!) Looking for more actions? See `SpacetimeDbPublisherCli.cs`
     public static class SpacetimeDbCliActions
     {
+        #region Tools
+        public static string PrettifyServerLogs(string cliResultCliOutput) => cliResultCliOutput
+            .Replace("INFO:", $"<color={SpacetimeMeta.INPUT_TEXT_COLOR}><b>INFO:</b></color>")
+            .Replace("WARNING:", SpacetimeMeta.GetStyledStr(SpacetimeMeta.StringStyle.Action, "<b>WARNING:</b>"))
+            .Replace("ERROR:", SpacetimeMeta.GetStyledStr(SpacetimeMeta.StringStyle.Action, "<b>ERROR:</b>"));
+        #endregion // Tools
+        
         #region High Level CLI Actions
         /// isInstalled = !cliResult.HasCliError 
         public static async Task<SpacetimeCliResult> GetIsSpacetimeCliInstalledAsync()
@@ -64,11 +71,19 @@ namespace SpacetimeDB.Editor
             return getEntityStructureResult;
         }
 
-        /// Uses the `spacetime logs` CLI command.
-        /// <param name="serverName"></param>
-        public static async Task<SpacetimeCliResult> GetLogsAsync(string serverName)
+        /// Uses the CLI command:
+        /// `spacetime logs [--server serverName] [--identity {identityName}] {moduleName} [maxNumLines]`
+        public static async Task<SpacetimeCliResult> GetLogsAsync(
+            string moduleName,
+            string serverName = null, 
+            string identityName = null,
+            int maxNumLines = -1)
         {
-            string argSuffix = $"spacetime logs {serverName}";
+            string serverNameStr = string.IsNullOrEmpty(serverName) ? "" : $" --server {serverName}";
+            string identityStr = string.IsNullOrEmpty(identityName) ? "" : $" --identity {identityName}";
+            string maxNumLinesStr = maxNumLines <= 0 ? "" : $" {maxNumLines.ToString()}";
+            string argSuffix = $"spacetime logs{serverNameStr}{identityStr} {moduleName}{maxNumLinesStr}";
+            
             SpacetimeCliResult cliResult = await runCliCommandAsync(argSuffix);
             return cliResult;
         }
